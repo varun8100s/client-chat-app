@@ -1,5 +1,5 @@
 
-const socket = io(`https://retrochatserver.onrender.com}`)
+const socket = io(`https://retrochatserver.onrender.com/`)
 const msgForm = document.getElementById('sendContainer')
 const msgInput = document.getElementById('messageInput')
 const msgContainer = document.getElementById('messageContainer')
