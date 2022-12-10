@@ -1,15 +1,15 @@
-const socket = io(`https://retrochatserver.onrender.com/`)
+const port = 4000
+const socket = io(`http://localhost:${port}`)
 const msgForm = document.getElementById('sendContainer')
 const msgInput = document.getElementById('messageInput')
 const msgContainer = document.getElementById('messageContainer')
 const errorContainer = document.getElementById('error-container')
-const api = "a61a1e437ff97e646b8d5bde849927fd61e8bbe8f7517e40569a1370"
-let IP, clientId
-getClientIp()
-socket.on('client-connected', data => {
-    console.log(data)
-    errorContainer.innerHTML = `<span style="color:rgb(0,250,250);">${data}</span><br>Current User ID: <span style="color:pink; font-size:large">${socket.id}</span>`
-}) 
+
+    
+    socket.on('client-connected', data => {
+        console.log(data)
+        errorContainer.innerHTML = `<span style="color:rgb(0,250,250);">${data}</span><br>Current User ID: <span style="color:pink;">${socket.id}</span>`
+    }) 
 
 
 socket.on('broadcast', data => {
@@ -25,11 +25,16 @@ msgForm.addEventListener('submit', event => {
         clientId = socket.id
         socket.emit('send-client-message', {id:clientId, msg:message})
         let userMessage = document.createElement("div")
-        userMessage.style = "color:yellow;"
-        userMessage.innerHTML=`<span style="color:red;">YOU:</span> ${message}`
+        userMessage.style = `color:yellow;`
+        userMessage.innerText = "YOU: "
+        userMessageSpan = document.createElement("span")
+        userMessageSpan.style = "color:red;"
+        userMessageSpan.innerText = message
+        userMessage.appendChild(userMessageSpan)
         // msgContainer.append(document.createElement('br'))
         msgContainer.append(userMessage)
         msgInput.value = ""
+        scrollToBottom(msgContainer); // The specif
     }
 })
 
@@ -47,23 +52,14 @@ function appendMessage(message) {
  
 
 socket.on("connect_error", (err) => {
+    errorContainer.innerText="Can not connect to server"
     console.log(`connect_error due to ${err.message}`);
 });
 
 
-function getClientIp() {
-    let request = new XMLHttpRequest();
-    let response;
-    request.open('GET', `https://api.ipdata.co/?api-key=${api}`);
-    
-    request.setRequestHeader('Accept', 'application/json');
-    
-    request.onreadystatechange = function () {
-        if (this.readyState === 4) {
-            IP = this.responseText
-            socket.emit('client-ip',{id:clientId, ip:IP})
-        }
-    };
-    
-    request.send();
+// To scroll to the bottom of a div
+const theElement = msgContainer
+
+const scrollToBottom = (node) => {
+	node.scrollTop = node.scrollHeight;
 }
