@@ -1,5 +1,5 @@
-
-const socket = io(`https://retrochatserver.onrender.com/`)
+const port = 4000
+const socket = io(`http://localhost:${port}`)
 const msgForm = document.getElementById('sendContainer')
 const msgInput = document.getElementById('messageInput')
 const msgContainer = document.getElementById('messageContainer')
@@ -42,7 +42,7 @@ function appendMessage(message) {
     const messageID = document.createElement('span')
     const messageValue = document.createElement('span')
     messageID.innerHTML = message.id + ": "
-    messageValue.innerHTML = message.msg
+    messageValue.innerText = message.msg
     messageID.style= " color: magenta;"
     msgContainer.append(messageID)
     msgContainer.append(messageValue)
