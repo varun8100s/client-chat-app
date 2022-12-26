@@ -66,4 +66,22 @@ const scrollToBottom = (node) => {
 }
 
 
+msgInput.addEventListener("input", (event) => {
+    console.log("typing");
+    handleTyping()
+});
+
+function handleTyping() {
+    socket.emit('typing', socket.id)
+}
+
+
+socket.on("someone-typing", (who) => {
+    
+    document.getElementById("currentlyTyping").innerText = who + " is typing . . .";
+    
+    setInterval(() => {
+        document.getElementById("currentlyTyping").innerText = ""
+    }, 5000);
+});
 
