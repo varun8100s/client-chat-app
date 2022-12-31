@@ -76,9 +76,11 @@ msgInput.addEventListener("input", (event) => {
 
 socket.on("someone-typing", (who) => {
   
+  typing.style = "content-visibility: visible";
   typing.innerText = who + " is typing ... "
   setTimeout(() => {
     typing.innerText = ""
+    typing.style = "content-visibility: hidden";
   },2000)
  
 });
