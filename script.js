@@ -9,9 +9,13 @@ function handleKeyUp(event) {
   } 
 
   const input = event.target;
-
+  
   const inputLength = input.innerText.length;
   const inputFontSize = input.style.fontSize;
+
+  if (input.innerText[inputLength - 1] == '\n') {
+    document.getElementById('sendButton').click()
+  }
 
   let newFontSize = BASE_FONT_SIZE;
 
@@ -35,3 +39,4 @@ const input = document.querySelector(".input");
 
 input.addEventListener("keyup", handleKeyUp);
 input.addEventListener("blur", handleBlur);
+
