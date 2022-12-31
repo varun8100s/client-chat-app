@@ -149,14 +149,14 @@ margin-top: 4px;
     margin:0;
 }
 
-@media (min-width:700px){
+@media (min-width:900px){
     #messageContainer {
             /* border: 1px solid white; */
             /* margin-bottom:100%; */
             max-width: 520px;}
 }
 
-@media (max-width: 700px) {
+@media (max-width: 900px) {
     html {
             display: block;
         }
