@@ -23,7 +23,6 @@ socket.on("broadcast", (data) => {
   msgContainer.append(messageElement);
   msgContainer.append(span)
 
-  msgInput.innerText = "";
   msgContainer.scrollTop = msgContainer.scrollHeight;
 });
 
@@ -74,13 +73,16 @@ msgInput.addEventListener("input", (event) => {
 });
 
 
+let userTimeout = null;
 socket.on("someone-typing", (who) => {
   
   typing.style = "content-visibility: visible";
   typing.innerText = who + " is typing ... "
-  setTimeout(() => {
+  if (userTimeout != null) clearTimeout(userTimeout);
+  userTimeout = setTimeout(() => {
     typing.innerText = ""
     typing.style = "content-visibility: hidden";
-  },2000)
+    userTimeout = null;
+  },3000)
  
 });
