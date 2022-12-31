@@ -1,87 +1,61 @@
-const socket = io(`https://retrochatserver.onrender.com`)
+const socket = io(`https://retrochatserver.onrender.com`);
 const msgForm = document.getElementById('sendContainer')
 const msgInput = document.getElementById('messageInput')
 const msgContainer = document.getElementById('messageContainer')
-const errorContainer = document.getElementById('error-container')
- 
-let clientId
-
-    
-    socket.on('client-connected', data => {
-        console.log(data)
-        errorContainer.innerHTML = `<span style="color:rgb(0,250,250);">${data}</span><br>Current User ID: <span style="color:pink;">${socket.id}</span>`
-    }) 
+const sendBtn = document.getElementById("sendButton");
 
 
-socket.on('broadcast', data => {
-    console.log(data)
-    appendMessage(data)
-    
-    
-})
-msgForm.addEventListener('submit', event => {
-    event.preventDefault()
-    const message = msgInput.value
-    if (message != "") { 
-        clientId = socket.id
-        socket.emit('send-client-message', {id:clientId, msg:message})
-        let userMessage = document.createElement("div")
-        userMessage.style = `color:yellow;`
-        userMessage.innerText = "YOU: "
-        userMessageSpan = document.createElement("span")
-        userMessageSpan.style = "color:red;"
-        userMessageSpan.innerText = message
-        userMessage.appendChild(userMessageSpan)
-        // msgContainer.append(document.createElement('br'))
-        msgContainer.append(userMessage)
-        msgInput.value = ""
-        scrollToBottom(msgContainer); // The specif
-    }
-})
+socket.on("client-connected", (data) => {
+    console.log("connected", data);  
+}); 
 
-function appendMessage(message) {
-    const messageID = document.createElement('span')
-    const messageValue = document.createElement('span')
-    messageID.innerHTML = message.id + ": "
-    messageValue.innerText = message.msg
-    messageID.style= " color: magenta;"
-    msgContainer.append(messageID)
-    msgContainer.append(messageValue)
-    msgContainer.append(document.createElement('br'))
-    msgContainer.scrollTop = msgContainer.scrollHeight 
-}
- 
+socket.on("broadcast", (data) => {
+  console.log(data);
+  let messageElement = document.createElement("div");
+  messageElement.className = "message-received";
+  messageElement.innerText = data.id+" said:\n "+data.msg;
+  msgContainer.append(messageElement);
 
-socket.on("connect_error", (err) => {
-    errorContainer.innerText="Can not connect to server"
-    console.log(`connect_error due to ${err.message}`);
+  msgInput.innerText = "";
+  msgContainer.scrollTop = msgContainer.scrollHeight;
 });
 
+msgForm.addEventListener("submit", (event) => {
+  event.preventDefault();
+  const message = msgInput.innerText.trim();
 
-// To scroll to the bottom of a div
-const theElement = msgContainer
+  if (message.length > 500) {
+    console.log("limit exceeded 500 characters")
+    sendBtn.style.color = 'pink'
+    sendBtn.innerText="Sending your moms measurements? 😂"
+    setTimeout(() => {
+      sendBtn.innerText = "Send !"    
+      sendBtn.style.color = 'white'
+    }, 3000)
 
-const scrollToBottom = (node) => {
-	node.scrollTop = node.scrollHeight;
-}
+    return;
+  }
 
-
-msgInput.addEventListener("input", (event) => {
-    console.log("typing");
-    handleTyping()
-});
-
-function handleTyping() {
-    socket.emit('typing', socket.id)
-}
-
-
-socket.on("someone-typing", (who) => {
+  if (message != "") {
+    socket.emit("send-client-message", { id: socket.id, msg: message });
     
-    document.getElementById("currentlyTyping").innerText = who + " is typing . . .";
+      let messageElement = document.createElement('div')
+      messageElement.className = 'message-sent'
+    messageElement.innerText = message
+      msgContainer.append(messageElement)
+      
+      msgInput.innerText = "";
+      msgContainer.scrollTop = msgContainer.scrollHeight;
     
-    setInterval(() => {
-        document.getElementById("currentlyTyping").innerText = ""
-    }, 5000);
+  } else {
+    sendBtn.style.color = "pink";
+    sendBtn.innerText = "Type something you retard 🤓";
+    setTimeout(() => {
+      sendBtn.innerText = "Send !";
+      sendBtn.style.color = "white";
+    }, 3000);
+
+    return;
+  }
 });
 
