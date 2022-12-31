@@ -108,6 +108,10 @@ margin-top: 4px;
     margin-top: 20px;
 }
 
+#errorCOntainer{
+    color:white;
+}
+
 #sendButton:hover {
     box-shadow: 0px 17px 99px 1px rgba(171, 64, 243, 0.51);
 }
@@ -134,23 +138,22 @@ margin-top: 4px;
     
 }
 
-#messageContainer::-webkit-scrollbar-thumb {
-    background-color: orange;
-    border-radius: 15px;
-    /*border: 1px solid red;*/
+#typing {
+    color:rgb(250, 188, 149);
 }
+
 #sendContainer {
     margin:0;
 }
 
-@media (min-width:1000px){
+@media (min-width:700px){
     #messageContainer {
             /* border: 1px solid white; */
             /* margin-bottom:100%; */
             max-width: 520px;}
 }
 
-@media (max-width: 1000px) {
+@media (max-width: 700px) {
     html {
             display: block;
         }
@@ -180,3 +183,5 @@ margin-top: 4px;
             width: 100%;
         }
 }
+
+

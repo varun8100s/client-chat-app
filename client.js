@@ -3,18 +3,25 @@ const msgForm = document.getElementById('sendContainer')
 const msgInput = document.getElementById('messageInput')
 const msgContainer = document.getElementById('messageContainer')
 const sendBtn = document.getElementById("sendButton");
+const errorContainer = document.getElementById("errorContainer");
+const typing = document.getElementById('typing')
 
+    socket.on("client-connected", (data) => {
+      console.log(data);
+      errorContainer.innerHTML = `<span style="color:rgb(0,250,250);">${data}</span><br><span style="color:white">Current User ID:</span> <span style="color:pink;">${socket.id}</span>`;
+    }); 
 
-socket.on("client-connected", (data) => {
-    console.log("connected", data);  
-}); 
 
 socket.on("broadcast", (data) => {
   console.log(data);
   let messageElement = document.createElement("div");
   messageElement.className = "message-received";
-  messageElement.innerText = data.id+" said:\n "+data.msg;
+  let span = document.createElement('span')
+  span.innerText = data.msg
+  span.style.color="white"
+  messageElement.innerText = data.id+" said:\n";
   msgContainer.append(messageElement);
+  msgContainer.append(span)
 
   msgInput.innerText = "";
   msgContainer.scrollTop = msgContainer.scrollHeight;
@@ -59,3 +66,19 @@ msgForm.addEventListener("submit", (event) => {
   }
 });
 
+
+
+msgInput.addEventListener("input", (event) => {
+  console.log("typing");
+  socket.emit("typing", socket.id);
+});
+
+
+socket.on("someone-typing", (who) => {
+  
+  typing.innerText = who + " is typing ... "
+  setTimeout(() => {
+    typing.innerText = ""
+  },2000)
+ 
+});
