@@ -20,7 +20,7 @@ body {
 
 h1 {
     color: wheat;
-    margin: 0;
+    margin: 10px 0px;
 }
 
 .messagecontainer::-webkit-scrollbar-thumb {
