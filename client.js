@@ -1,6 +1,6 @@
 const socket = io(`https://retrochatserver.onrender.com`);
 const msgForm = document.getElementById('sendContainer')
-const msgInput = document.getElementById('messageInput')
+const msgInput = document.getElementById('name')
 const msgContainer = document.getElementById('messageContainer')
 const sendBtn = document.getElementById("sendButton");
 const errorContainer = document.getElementById("errorContainer");
@@ -9,6 +9,8 @@ const typing = document.getElementById('typing')
     socket.on("client-connected", (data) => {
       console.log(data);
       errorContainer.innerHTML = `<span style="color:rgb(0,250,250);">${data}</span><br><span style="color:white">Current User ID:</span> <span style="color:pink;">${socket.id}</span>`;
+      document.getElementById('connecting').innerHTML = ""
+      
     }); 
 
 
@@ -23,12 +25,13 @@ socket.on("broadcast", (data) => {
   msgContainer.append(messageElement);
   msgContainer.append(span)
 
+  msgInput.innerText = "";
   msgContainer.scrollTop = msgContainer.scrollHeight;
 });
 
 msgForm.addEventListener("submit", (event) => {
   event.preventDefault();
-  const message = msgInput.innerText.trim();
+  const message = msgInput.value.trim();
 
   if (message.length > 500) {
     console.log("limit exceeded 500 characters")
@@ -50,7 +53,7 @@ msgForm.addEventListener("submit", (event) => {
     messageElement.innerText = message
       msgContainer.append(messageElement)
       
-      msgInput.innerText = "";
+      msgInput.value = "";
       msgContainer.scrollTop = msgContainer.scrollHeight;
     
   } else {
@@ -73,16 +76,13 @@ msgInput.addEventListener("input", (event) => {
 });
 
 
-let userTimeout = null;
 socket.on("someone-typing", (who) => {
   
   typing.style = "content-visibility: visible";
   typing.innerText = who + " is typing ... "
-  if (userTimeout != null) clearTimeout(userTimeout);
-  userTimeout = setTimeout(() => {
+  setTimeout(() => {
     typing.innerText = ""
     typing.style = "content-visibility: hidden";
-    userTimeout = null;
-  },3000)
+  },2000)
  
 });
